@@ -1,4 +1,4 @@
-import { TrendingUp, TrendingDown, Users, Car, Calendar, DollarSign } from 'lucide-react';
+import { TrendingUp, TrendingDown, Users, Car, Calendar, TrendingUp as RevenueIcon } from 'lucide-react';
 
 export interface StatItem {
   title: string;
@@ -14,18 +14,33 @@ interface DashboardStatsProps {
 }
 
 export default function DashboardStats({ stats, loading = false }: DashboardStatsProps) {
-  const getColorClasses = (color: StatItem['color']) => {
+  const getGradientClasses = (color: StatItem['color']) => {
     switch (color) {
       case 'blue':
-        return 'bg-blue-50 text-blue-600 border-blue-200';
+        return 'from-blue-50 to-blue-100 border-blue-200';
       case 'green':
-        return 'bg-green-50 text-green-600 border-green-200';
+        return 'from-green-50 to-green-100 border-green-200';
       case 'purple':
-        return 'bg-purple-50 text-purple-600 border-purple-200';
+        return 'from-purple-50 to-purple-100 border-purple-200';
       case 'amber':
-        return 'bg-amber-50 text-amber-600 border-amber-200';
+        return 'from-amber-50 to-amber-100 border-amber-200';
       default:
-        return 'bg-gray-50 text-gray-600 border-gray-200';
+        return 'from-gray-50 to-gray-100 border-gray-200';
+    }
+  };
+
+  const getIconBgColor = (color: StatItem['color']) => {
+    switch (color) {
+      case 'blue':
+        return 'bg-blue-600';
+      case 'green':
+        return 'bg-green-600';
+      case 'purple':
+        return 'bg-purple-600';
+      case 'amber':
+        return 'bg-amber-600';
+      default:
+        return 'bg-gray-600';
     }
   };
 
@@ -38,7 +53,7 @@ export default function DashboardStats({ stats, loading = false }: DashboardStat
       case 'active bookings':
         return Calendar;
       case 'monthly revenue':
-        return DollarSign;
+        return RevenueIcon;
       default:
         return TrendingUp;
     }
@@ -62,10 +77,10 @@ export default function DashboardStats({ stats, loading = false }: DashboardStat
       {stats.map((stat, index) => {
         const Icon = getStatIcon(stat.title);
         return (
-          <div key={index} className="bg-white rounded-lg shadow-sm border p-6 hover:shadow-md transition-shadow">
+          <div key={index} className={`bg-gradient-to-br ${getGradientClasses(stat.color)} border rounded-xl p-6 shadow-sm hover:shadow-lg transition-all`}>
             <div className="flex items-center justify-between mb-4">
-              <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${getColorClasses(stat.color)}`}>
-                <Icon className="w-6 h-6" />
+              <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${getIconBgColor(stat.color)} shadow-sm`}>
+                <Icon className="w-6 h-6 text-white" />
               </div>
               {loading ? (
                 <div className="h-4 w-14 bg-gray-100 rounded" />
@@ -74,11 +89,11 @@ export default function DashboardStats({ stats, loading = false }: DashboardStat
               )}
             </div>
             <div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-1">
-                {loading ? <span className="inline-block h-7 w-24 bg-gray-100 rounded" /> : stat.value}
+              <h3 className="text-3xl font-bold text-gray-900 mb-2">
+                {loading ? <span className="inline-block h-8 w-24 bg-gray-100 rounded" /> : stat.value}
               </h3>
-              <p className="text-sm font-medium text-gray-900 mb-1">{stat.title}</p>
-              <p className="text-xs text-gray-500">
+              <p className="text-sm font-bold text-gray-700 uppercase tracking-wide mb-1">{stat.title}</p>
+              <p className="text-xs text-gray-600">
                 {loading ? <span className="inline-block h-4 w-36 bg-gray-100 rounded" /> : stat.subtitle}
               </p>
             </div>

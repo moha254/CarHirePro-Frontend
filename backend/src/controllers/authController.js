@@ -55,11 +55,16 @@ export const getProfile = async (req, res) => {
 export const createDemoUsers = async () => {
   try {
     const demoUsers = [
-      { name: 'Director User', email: 'director@carhire.com', password: 'password123', role: 'Director' },
-      { name: 'Staff User', email: 'staff@carhire.com', password: 'password123', role: 'Staff' },
-      { name: 'Owner User', email: 'owner@carhire.com', password: 'password123', role: 'Owner' },
-      { name: 'Client User', email: 'client@carhire.com', password: 'password123', role: 'Client' }
+      { name: 'Director User', email: 'director@carhire.com', password: 'Password125', role: 'Director' },
     ];
+
+    // Create a real user for the director
+    const directorUser = { name: 'Real Director User', email: 'director2@shilaabo.com', password: 'Password125', role: 'Director' };
+    const existingDirector = await User.findOne({ email: directorUser.email });
+    if (!existingDirector) {
+      await User.create(directorUser);
+      console.log(`✅ Created director user: ${directorUser.email}`);
+    }
 
     for (const userData of demoUsers) {
       const existing = await User.findOne({ email: userData.email });

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { 
   Plus, Calendar, Car, DollarSign, Bell, 
-  X, Check, Clock, AlertCircle, FileText, Send,
-  Users, Mail, Download, RefreshCw, Eye
+  X, Check, Clock, FileText, Send,
+  RefreshCw
 } from 'lucide-react';
 import { quickActionsService } from '../../services/quickActionsService';
 import { useAuth } from '../../contexts/AuthContext';
@@ -58,7 +58,7 @@ export default function QuickActions({ className = '' }: QuickActionsProps) {
   });
 
   const [returnForm, setReturnForm] = useState({
-    mileage: '',
+    mileage: 0,
     notes: '',
     damageReport: ''
   });
@@ -218,7 +218,7 @@ export default function QuickActions({ className = '' }: QuickActionsProps) {
       daily_rate: 0
     });
     setReturnForm({
-      mileage: '',
+      mileage: 0,
       notes: '',
       damageReport: ''
     });
@@ -328,76 +328,81 @@ export default function QuickActions({ className = '' }: QuickActionsProps) {
   return (
     <div className={className}>
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-lg font-semibold text-gray-900">Quick Actions</h2>
-          <p className="text-sm text-gray-600">
-            Perform real-time business operations instantly
-          </p>
+          <h2 className="text-xl font-bold text-gray-900 flex items-center gap-3">
+            <div className="p-2 bg-gradient-to-br from-green-600 to-green-700 rounded-lg">
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            Quick Actions
+          </h2>
+          <p className="text-gray-600 mt-2">Perform real-time business operations instantly</p>
         </div>
         
         <button
           onClick={loadQuickActionsStats}
-          className="flex items-center px-3 py-1.5 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+          className="flex items-center px-4 py-2 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition-all shadow-lg hover:shadow-xl"
         >
-          <RefreshCw className={`w-3 h-3 mr-1 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
           Refresh
         </button>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-xl p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-medium text-gray-500">Today's Bookings</p>
-              <p className="text-lg font-bold text-gray-900">{stats.todayBookings}</p>
+              <p className="text-xs font-bold text-blue-700 uppercase tracking-wide">Today's Bookings</p>
+              <p className="text-2xl font-bold text-blue-900 mt-1">{stats.todayBookings}</p>
             </div>
-            <div className="p-2 bg-blue-100 rounded-full">
-              <Calendar className="w-4 h-4 text-blue-600" />
+            <div className="p-3 bg-blue-600 rounded-xl shadow-sm">
+              <Calendar className="w-5 h-5 text-white" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+        <div className="bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-xl p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-medium text-gray-500">Active Bookings</p>
-              <p className="text-lg font-bold text-gray-900">{stats.activeBookings}</p>
+              <p className="text-xs font-bold text-green-700 uppercase tracking-wide">Active Bookings</p>
+              <p className="text-2xl font-bold text-green-900 mt-1">{stats.activeBookings}</p>
             </div>
-            <div className="p-2 bg-green-100 rounded-full">
-              <Clock className="w-4 h-4 text-green-600" />
+            <div className="p-3 bg-green-600 rounded-xl shadow-sm">
+              <Clock className="w-5 h-5 text-white" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+        <div className="bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 rounded-xl p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-medium text-gray-500">Available Vehicles</p>
-              <p className="text-lg font-bold text-gray-900">{stats.availableVehicles}</p>
+              <p className="text-xs font-bold text-purple-700 uppercase tracking-wide">Available Vehicles</p>
+              <p className="text-2xl font-bold text-purple-900 mt-1">{stats.availableVehicles}</p>
             </div>
-            <div className="p-2 bg-purple-100 rounded-full">
-              <Car className="w-4 h-4 text-purple-600" />
+            <div className="p-3 bg-purple-600 rounded-xl shadow-sm">
+              <Car className="w-5 h-5 text-white" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+        <div className="bg-gradient-to-br from-amber-50 to-amber-100 border border-amber-200 rounded-xl p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-medium text-gray-500">Pending Payments</p>
-              <p className="text-lg font-bold text-gray-900">{stats.pendingPayments}</p>
+              <p className="text-xs font-bold text-amber-700 uppercase tracking-wide">Pending Payments</p>
+              <p className="text-2xl font-bold text-amber-900 mt-1">{stats.pendingPayments}</p>
             </div>
-            <div className="p-2 bg-yellow-100 rounded-full">
-              <DollarSign className="w-4 h-4 text-yellow-600" />
+            <div className="p-3 bg-amber-600 rounded-xl shadow-sm">
+              <DollarSign className="w-5 h-5 text-white" />
             </div>
           </div>
         </div>
       </div>
 
       {/* Quick Actions Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
         {availableActions.slice(0, 6).map((action) => {
           const Icon = action.icon;
           return (
@@ -408,21 +413,21 @@ export default function QuickActions({ className = '' }: QuickActionsProps) {
                 console.log('Button clicked:', action.id);
                 action.action();
               }}
-              className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200 text-left group cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-200 text-left group cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
               type="button"
             >
-              <div className="flex items-center justify-between mb-3">
-                <div className={`p-2 rounded-full ${action.color} text-white`}>
-                  <Icon className="w-4 h-4" />
+              <div className="flex items-center justify-between mb-4">
+                <div className={`p-3 rounded-xl ${action.color} text-white shadow-sm`}>
+                  <Icon className="w-5 h-5" />
                 </div>
                 {action.badge && action.badge > 0 && (
-                  <span className="bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">
+                  <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full font-semibold">
                     {action.badge}
                   </span>
                 )}
               </div>
-              <h3 className="font-medium text-gray-900 mb-1 text-sm">{action.title}</h3>
-              <p className="text-xs text-gray-600 line-clamp-2">{action.description}</p>
+              <h3 className="font-bold text-gray-900 mb-2 text-base">{action.title}</h3>
+              <p className="text-sm text-gray-600 line-clamp-2">{action.description}</p>
             </button>
           );
         })}
@@ -760,7 +765,7 @@ export default function QuickActions({ className = '' }: QuickActionsProps) {
                     <input
                       type="number"
                       value={returnForm.mileage}
-                      onChange={(e) => setReturnForm(prev => ({ ...prev, mileage: e.target.value }))}
+                      onChange={(e) => setReturnForm(prev => ({ ...prev, mileage: parseFloat(e.target.value) || 0 }))}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="Enter current mileage"
                     />

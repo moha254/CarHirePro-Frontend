@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Search, Phone, MapPin, Edit, Trash2, X, AlertCircle, CreditCard, UserX, UserCheck } from 'lucide-react';
+import { Plus, Search, Phone, MapPin, Edit, Trash2, X, AlertCircle, CreditCard, UserX, UserCheck, User, RefreshCw, Save } from 'lucide-react';
 import { api } from '../../lib/api';
 import { useAuth } from '../../contexts/AuthContext';
 import { hasPermission } from '../../lib/permissions';
@@ -67,102 +67,145 @@ function EditClientModal({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+      <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <div className="p-6">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold text-gray-900">Edit Client</h2>
+          <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+            <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+              <div className="p-2 bg-yellow-600 rounded-lg">
+                <Edit className="w-5 h-5 text-white" />
+              </div>
+              Edit Client
+            </h2>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-500"
+              className="text-gray-400 hover:text-gray-600 transition-colors p-2 hover:bg-gray-100 rounded-lg"
               aria-label="Close"
               disabled={saving}
             >
               <X className="h-6 w-6" />
             </button>
           </div>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-6">
             {error && (
-              <div className="bg-red-50 border-l-4 border-red-400 p-2">
+              <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded-lg">
                 <div className="flex items-center text-sm text-red-700">
-                  <AlertCircle className="h-4 w-4 mr-1" />
+                  <AlertCircle className="h-4 w-4 mr-2" />
                   <span>{error}</span>
                 </div>
               </div>
             )}
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Full Name*</label>
-              <input
-                type="text"
-                name="fullName"
-                value={formData.fullName}
-                onChange={handleChange}
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                disabled={saving}
-                required
-              />
+            {/* Personal Information */}
+            <div className="bg-gray-50 rounded-xl p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <User className="w-5 h-5 text-blue-600" />
+                Personal Information
+              </h3>
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Full Name*</label>
+                  <input
+                    type="text"
+                    name="fullName"
+                    value={formData.fullName}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-lg"
+                    disabled={saving}
+                    required
+                  />
+                </div>
+              </div>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Phone*</label>
-              <input
-                type="text"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                disabled={saving}
-                required
-              />
+            {/* Contact Information */}
+            <div className="bg-gray-50 rounded-xl p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <Phone className="w-5 h-5 text-blue-600" />
+                Contact Information
+              </h3>
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Phone*</label>
+                  <input
+                    type="text"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-lg"
+                    disabled={saving}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Address</label>
+                  <input
+                    type="text"
+                    name="address"
+                    value={formData.address || ""}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-lg"
+                    disabled={saving}
+                  />
+                </div>
+              </div>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">ID/Passport*</label>
-              <input
-                type="text"
-                name="idOrPassport"
-                value={formData.idOrPassport}
-                onChange={handleChange}
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                disabled={saving}
-                required
-              />
+            {/* Identification Documents */}
+            <div className="bg-gray-50 rounded-xl p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <CreditCard className="w-5 h-5 text-blue-600" />
+                Identification Documents
+              </h3>
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">ID/Passport*</label>
+                  <input
+                    type="text"
+                    name="idOrPassport"
+                    value={formData.idOrPassport}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-lg uppercase"
+                    disabled={saving}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Driver's License*</label>
+                  <input
+                    type="text"
+                    name="licenseNumber"
+                    value={formData.licenseNumber}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-lg uppercase"
+                    disabled={saving}
+                    required
+                  />
+                </div>
+              </div>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Driver's License*</label>
-              <input
-                type="text"
-                name="licenseNumber"
-                value={formData.licenseNumber}
-                onChange={handleChange}
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                disabled={saving}
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Address</label>
-              <input
-                type="text"
-                name="address"
-                value={formData.address || ""}
-                onChange={handleChange}
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                disabled={saving}
-              />
-            </div>
-            <div className="flex items-center justify-end space-x-2 pt-2">
+            <div className="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4 pt-6 border-t border-gray-200">
               <button
                 type="button"
-                className="px-4 py-2 rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300"
+                className="inline-flex items-center px-6 py-3 border border-gray-300 shadow-sm text-sm font-semibold rounded-lg text-gray-700 bg-white hover:bg-gray-100 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
                 onClick={onClose}
                 disabled={saving}
               >
+                <X className="-ml-1 mr-2 h-5 w-5" />
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700"
+                className="inline-flex items-center px-6 py-3 border border-transparent text-sm font-semibold rounded-lg shadow-sm text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition disabled:opacity-60 disabled:cursor-not-allowed"
                 disabled={saving}
               >
-                {saving ? "Saving..." : "Save"}
+                {saving ? (
+                  <>
+                    <RefreshCw className="animate-spin -ml-1 mr-2 h-5 w-5" />
+                    Saving...
+                  </>
+                ) : (
+                  <>
+                    <Save className="-ml-1 mr-2 h-5 w-5" />
+                    Save Changes
+                  </>
+                )}
               </button>
             </div>
           </form>
@@ -429,18 +472,23 @@ export default function ClientManagement() {
         </div>
       )}
 
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-2">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Client Management</h1>
-          <p className="text-gray-600 mt-1">Manage your client database and accounts</p>
+          <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+            <div className="p-2 bg-blue-600 rounded-lg">
+              <User className="w-6 h-6 text-white" />
+            </div>
+            Client Management
+          </h1>
+          <p className="text-gray-600 mt-2 text-lg">Comprehensive client database management with detailed profiles and relationship tracking</p>
         </div>
         <PermissionGuard module="clients" action="create">
           <button
             onClick={() => setShowAddModal(true)}
-            className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
           >
-            <Plus className="w-4 h-4 mr-2" />
-            Add Client
+            <Plus className="w-5 h-5 mr-3" />
+            <span className="font-semibold">Add New Client</span>
           </button>
         </PermissionGuard>
       </div>
@@ -458,34 +506,91 @@ export default function ClientManagement() {
         </div>
       )}
 
-      {/* Search */}
-      <div className="bg-white rounded-lg shadow-sm border p-4 mb-6">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-          <input
-            type="text"
-            placeholder="Search clients by name, ID, or phone..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            aria-label="Search clients"
-          />
+      {/* Enhanced Search with Stats */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <div className="lg:col-span-3">
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" aria-label="Search Icon" />
+              <input
+                type="text"
+                placeholder="Search clients by name, ID, phone, license..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-lg"
+                aria-label="Search clients"
+                autoFocus
+              />
+            </div>
+          </div>
+          <div className="flex items-center justify-center">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-gray-900">{clients.length}</div>
+              <div className="text-sm text-gray-500">Total Clients</div>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* User-Friendly Table with Edit icon */}
-      <div className="bg-white shadow-sm rounded-lg overflow-hidden">
+      {/* Client Statistics Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-xl p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-green-800 font-semibold text-sm uppercase tracking-wide">Active</p>
+              <p className="text-3xl font-bold text-green-900 mt-2">
+                {clients.filter(c => c.status === 'ACTIVE').length}
+              </p>
+            </div>
+            <div className="p-3 bg-green-200 rounded-full">
+              <UserCheck className="w-6 h-6 text-green-700" />
+            </div>
+          </div>
+        </div>
+        <div className="bg-gradient-to-br from-red-50 to-red-100 border border-red-200 rounded-xl p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-red-800 font-semibold text-sm uppercase tracking-wide">Suspended</p>
+              <p className="text-3xl font-bold text-red-900 mt-2">
+                {clients.filter(c => c.status === 'SUSPENDED').length}
+              </p>
+            </div>
+            <div className="p-3 bg-red-200 rounded-full">
+              <UserX className="w-6 h-6 text-red-700" />
+            </div>
+          </div>
+        </div>
+        <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-xl p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-blue-800 font-semibold text-sm uppercase tracking-wide">New This Month</p>
+              <p className="text-3xl font-bold text-blue-900 mt-2">
+                {clients.filter(c => {
+                  const joinDate = new Date(c.createdAt);
+                  const now = new Date();
+                  return joinDate.getMonth() === now.getMonth() && joinDate.getFullYear() === now.getFullYear();
+                }).length}
+              </p>
+            </div>
+            <div className="p-3 bg-blue-200 rounded-full">
+              <Plus className="w-6 h-6 text-blue-700" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Clients Table */}
+      <div className="bg-white shadow-sm rounded-xl overflow-hidden border border-gray-200">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+            <thead className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
               <tr>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Client</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID/Passport</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">License</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
-                <th scope="col" className="relative px-6 py-3">
+                <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Client Information</th>
+                <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Contact Details</th>
+                <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Identification</th>
+                <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Status</th>
+                <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Member Since</th>
+                <th scope="col" className="relative px-6 py-4">
                   <span className="sr-only">Actions</span>
                 </th>
               </tr>
@@ -495,92 +600,114 @@ export default function ClientManagement() {
                 <tr key={client._id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
-                      <div className="flex-shrink-0 h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center">
-                        <span className="text-sm font-medium text-blue-600">
+                      <div className="flex-shrink-0 h-12 w-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center shadow-sm">
+                        <span className="text-base font-semibold text-blue-700">
                           {client.fullName.charAt(0).toUpperCase()}
                         </span>
                       </div>
                       <div className="ml-4">
-                        <div className="text-sm font-medium text-gray-900">{client.fullName}</div>
+                        <div className="text-base font-semibold text-gray-900">{client.fullName}</div>
                       </div>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{client.phone}</div>
-                    {client.address && (
-                      <div className="text-sm text-gray-500 truncate max-w-xs">{client.address}</div>
-                    )}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {client.idOrPassport}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {client.licenseNumber}
+                    <div className="text-sm text-gray-900">
+                      <div className="font-medium flex items-center">
+                        <Phone className="w-4 h-4 mr-2 text-gray-400" />
+                        {client.phone}
+                      </div>
+                      {client.address && (
+                        <div className="text-gray-500 truncate max-w-xs mt-1 flex items-center">
+                          <MapPin className="w-4 h-4 mr-2 text-gray-400 flex-shrink-0" />
+                          {client.address}
+                        </div>
+                      )}
+                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                      client.status === 'ACTIVE' 
-                        ? 'bg-green-100 text-green-800' 
-                        : 'bg-red-100 text-red-800'
-                    }`}>
-                      {client.status}
-                    </span>
+                    <div className="text-sm text-gray-900">
+                      <div className="font-medium flex items-center">
+                        <CreditCard className="w-4 h-4 mr-2 text-gray-400" />
+                        {client.idOrPassport}
+                      </div>
+                      <div className="text-gray-500 mt-1 text-xs">License: {client.licenseNumber}</div>
+                    </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {new Date(client.createdAt).toLocaleDateString()}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex flex-row gap-2 justify-end" style={{minWidth:200}}>
-                    <button
-                      onClick={() => {
-                        setSelectedClient(client);
-                        setShowDetailsModal(true);
-                      }}
-                      title="View client details"
-                      className="text-blue-600 hover:underline px-2"
-                    >
-                      View
-                    </button>
-                    <button
-                      onClick={() => handleEditClientClick(client)}
-                      className="text-yellow-500 hover:bg-yellow-50 rounded transition-colors p-1"
-                      title="Edit client"
-                      aria-label="Edit"
-                    >
-                      <Edit className="h-4 w-4" />
-                    </button>
-                    {client.status === 'ACTIVE' ? (
-                      <PermissionGuard module="clients" action="suspend">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center space-x-3">
+                      <span
+                        className={`px-3 py-1.5 rounded-full text-xs font-semibold shadow-sm border
+                          ${
+                            client.status === 'ACTIVE'
+                              ? 'bg-green-100 text-green-800 border-green-200'
+                              : 'bg-red-100 text-red-800 border-red-200'
+                          }`
+                        }
+                      >
+                        {client.status}
+                      </span>
+                      <PermissionGuard module="clients" action={client.status === 'ACTIVE' ? 'suspend' : 'activate'}>
                         <button
-                          onClick={() => handleStatusChange(client._id, 'SUSPENDED')}
+                          onClick={() => handleStatusChange(client._id, client.status === 'ACTIVE' ? 'SUSPENDED' : 'ACTIVE')}
                           disabled={statusUpdating === client._id}
-                          className="text-orange-600 hover:bg-orange-50 rounded transition-colors p-1 disabled:opacity-50"
-                          title="Suspend client"
-                          aria-label="Suspend"
+                          className={`p-2 rounded-lg transition-colors shadow-sm
+                            ${client.status === 'ACTIVE'
+                              ? 'text-orange-600 bg-orange-50 hover:bg-orange-100'
+                              : 'text-green-600 bg-green-50 hover:bg-green-100'
+                            } ${statusUpdating === client._id ? 'opacity-50 cursor-wait' : ''}`}
+                          title={client.status === 'ACTIVE' ? 'Suspend client' : 'Activate client'}
+                          aria-label={client.status === 'ACTIVE' ? 'Suspend' : 'Activate'}
                         >
-                          <UserX className="h-4 w-4" />
+                          {client.status === 'ACTIVE' ? (
+                            <UserX className="h-4 w-4" />
+                          ) : (
+                            <UserCheck className="h-4 w-4" />
+                          )}
                         </button>
                       </PermissionGuard>
-                    ) : (
-                      <PermissionGuard module="clients" action="activate">
-                        <button
-                          onClick={() => handleStatusChange(client._id, 'ACTIVE')}
-                          disabled={statusUpdating === client._id}
-                          className="text-green-600 hover:bg-green-50 rounded transition-colors p-1 disabled:opacity-50"
-                          title="Activate client"
-                          aria-label="Activate"
-                        >
-                          <UserCheck className="h-4 w-4" />
-                        </button>
-                      </PermissionGuard>
-                    )}
-                    <button
-                      onClick={() => handleDeleteClick(client)}
-                      className="text-red-600 hover:bg-red-50 rounded transition-colors p-1"
-                      title="Delete client"
-                      aria-label="Delete"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
+                      {statusUpdating === client._id && (
+                        <RefreshCw className="h-4 w-4 text-blue-400 animate-spin" />
+                      )}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm text-gray-900">
+                      <div className="font-medium">{new Date(client.createdAt).toLocaleDateString()}</div>
+                      <div className="text-gray-500 text-xs">
+                        {Math.floor((Date.now() - new Date(client.createdAt).getTime()) / (1000 * 60 * 60 * 24))} days ago
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <div className="flex items-center justify-end space-x-2">
+                      <button
+                        onClick={() => {
+                          setSelectedClient(client);
+                          setShowDetailsModal(true);
+                        }}
+                        className="inline-flex items-center px-3 py-2 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition focus:outline-none focus:ring-2 focus:ring-blue-200 font-medium"
+                        title="View client details"
+                        aria-label="View client"
+                      >
+                        View
+                      </button>
+                      <button
+                        onClick={() => handleEditClientClick(client)}
+                        className="inline-flex items-center p-2 text-yellow-600 bg-yellow-50 hover:bg-yellow-100 rounded-lg transition focus:outline-none focus:ring-2 focus:ring-yellow-200"
+                        title="Edit client"
+                        aria-label="Edit client"
+                      >
+                        <Edit className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteClick(client)}
+                        className="inline-flex items-center p-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition focus:outline-none focus:ring-2 focus:ring-red-200"
+                        title="Delete client"
+                        aria-label="Delete client"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -590,16 +717,15 @@ export default function ClientManagement() {
       </div>
 
       {filteredClients.length === 0 && !loading && (
-        <div className="text-center py-12">
-          <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Search className="w-8 h-8 text-gray-400" />
+        <div className="text-center py-16">
+          <div className="w-32 h-32 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mx-auto mb-6">
+            <User className="w-12 h-12 text-gray-400" />
           </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No clients found</h3>
-          <p className="text-gray-600">
+          <h3 className="text-xl font-semibold text-gray-900 mb-3">No clients found</h3>
+          <p className="text-gray-600 text-lg max-w-md mx-auto">
             {searchTerm
-              ? 'Try adjusting your search criteria'
-              : 'Get started by adding your first client'
-            }
+              ? 'Try adjusting your search criteria or check for typos.'
+              : 'Start building your client database by adding your first client using the Add New Client button above.'}
           </p>
         </div>
       )}

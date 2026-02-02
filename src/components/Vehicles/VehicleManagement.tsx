@@ -212,18 +212,23 @@ export default function VehicleManagement() {
         </div>
       )}
 
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-3">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Vehicle Management</h1>
-          <p className="text-gray-600 mt-1">Manage your fleet and vehicle status easily. Use the tools to search, add, edit, or remove vehicles. Click the icon buttons for quick actions.</p>
+          <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+            <div className="p-2 bg-blue-600 rounded-lg">
+              <Car className="w-6 h-6 text-white" />
+            </div>
+            Fleet Management
+          </h1>
+          <p className="text-gray-600 mt-2 text-lg">Comprehensive vehicle fleet control with real-time status tracking and management tools</p>
         </div>
         <PermissionGuard module="vehicles" action="create">
           <button
             onClick={() => setShowAddModal(true)}
-            className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow"
+            className="flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
           >
-            <Plus className="w-4 h-4 mr-2" />
-            Add Vehicle
+            <Plus className="w-5 h-5 mr-3" />
+            <span className="font-semibold">Add New Vehicle</span>
           </button>
         </PermissionGuard>
       </div>
@@ -241,37 +246,87 @@ export default function VehicleManagement() {
         </div>
       )}
 
-      {/* Enhanced Search */}
-      <div className="bg-white rounded-lg shadow-sm border p-4 mb-6">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" aria-label="Search Icon" />
-          <input
-            type="text"
-            placeholder="🔍 Search vehicles by make, model, or license plate..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-            aria-label="Search vehicles"
-            autoFocus
-          />
+      {/* Enhanced Search with Stats */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <div className="lg:col-span-3">
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" aria-label="Search Icon" />
+              <input
+                type="text"
+                placeholder="Search vehicles by make, model, license plate..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-lg"
+                aria-label="Search vehicles"
+                autoFocus
+              />
+            </div>
+          </div>
+          <div className="flex items-center justify-center">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-gray-900">{vehicles.length}</div>
+              <div className="text-sm text-gray-500">Total Vehicles</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Fleet Statistics Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-xl p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-green-800 font-semibold text-sm uppercase tracking-wide">Available</p>
+              <p className="text-3xl font-bold text-green-900 mt-2">
+                {vehicles.filter(v => v.status === 'Available').length}
+              </p>
+            </div>
+            <div className="p-3 bg-green-200 rounded-full">
+              <Car className="w-6 h-6 text-green-700" />
+            </div>
+          </div>
+        </div>
+        <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-xl p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-blue-800 font-semibold text-sm uppercase tracking-wide">Booked</p>
+              <p className="text-3xl font-bold text-blue-900 mt-2">
+                {vehicles.filter(v => v.status === 'Booked').length}
+              </p>
+            </div>
+            <div className="p-3 bg-blue-200 rounded-full">
+              <Clock className="w-6 h-6 text-blue-700" />
+            </div>
+          </div>
+        </div>
+        <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 border border-yellow-200 rounded-xl p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-yellow-800 font-semibold text-sm uppercase tracking-wide">Maintenance</p>
+              <p className="text-3xl font-bold text-yellow-900 mt-2">
+                {vehicles.filter(v => v.status === 'Maintenance').length}
+              </p>
+            </div>
+            <div className="p-3 bg-yellow-200 rounded-full">
+              <AlertCircle className="w-6 h-6 text-yellow-700" />
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Vehicles Table */}
-      <div className="bg-white shadow-sm rounded-lg overflow-hidden">
+      <div className="bg-white shadow-sm rounded-xl overflow-hidden border border-gray-200">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+            <thead className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
               <tr>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vehicle</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Details</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date Out</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time Out</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date In</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time In</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Daily Rate</th>
-                <th scope="col" className="relative px-6 py-3">
+                <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Vehicle Information</th>
+                <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Specifications</th>
+                <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Status</th>
+                <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Rental Period</th>
+                <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Daily Rate</th>
+                <th scope="col" className="relative px-6 py-4">
                   <span className="sr-only">Actions</span>
                 </th>
               </tr>
@@ -282,27 +337,25 @@ export default function VehicleManagement() {
                   <tr key={vehicle._id} className="hover:bg-gray-50 group">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
-                        <div className="flex-shrink-0 h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center shadow-inner">
-                          <Car className="w-5 h-5 text-blue-600" />
+                        <div className="flex-shrink-0 h-12 w-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center shadow-sm">
+                          <Car className="w-6 h-6 text-blue-700" />
                         </div>
                         <div className="ml-4">
-                          <div className="text-sm font-medium text-gray-900">
+                          <div className="text-base font-semibold text-gray-900">
                             {vehicle.year} {vehicle.make} {vehicle.model}
                           </div>
-                          <div className="text-sm text-gray-500">{vehicle.licensePlate}</div>
+                          <div className="text-sm text-gray-500 font-medium">{vehicle.licensePlate}</div>
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm text-gray-900">{vehicle.color || <span className="text-gray-400 italic">N/A</span>}</div>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900 font-medium">{vehicle.color || <span className="text-gray-400 italic">Not specified</span>}</div>
                       <div className="text-sm text-gray-500">Year: {vehicle.year}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-
-                      {/* --- Status display with status change dropdown --- */}
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-3">
                         <span
-                          className={`px-2.5 py-0.5 rounded-full text-xs font-medium shadow-sm border
+                          className={`px-3 py-1.5 rounded-full text-xs font-semibold shadow-sm border
                             ${
                               vehicle.status === 'Available'
                                 ? 'bg-green-100 text-green-800 border-green-200'
@@ -316,8 +369,8 @@ export default function VehicleManagement() {
                         </span>
                         <PermissionGuard module="vehicles" action="update">
                           <select
-                            className={`text-xs rounded border-gray-300 py-0.5 pl-1 pr-8 focus:ring-2 focus:ring-blue-200
-                            ${statusLoadingId === vehicle._id ? 'opacity-50 cursor-wait' : 'cursor-pointer'}
+                            className={`text-xs rounded-lg border-gray-300 py-1.5 pl-2 pr-8 focus:ring-2 focus:ring-blue-200 bg-white shadow-sm
+                            ${statusLoadingId === vehicle._id ? 'opacity-50 cursor-wait' : 'cursor-pointer hover:border-blue-400'}
                             `}
                             value={vehicle.status || 'Available'}
                             onChange={e => handleChangeVehicleStatus(vehicle, e.target.value as VehicleStatus)}
@@ -333,68 +386,49 @@ export default function VehicleManagement() {
                           <RefreshCw className="h-4 w-4 text-blue-400 animate-spin" />
                         )}
                       </div>
-                      {/* --- End status display --- */}
-
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {vehicle.dateOut ? (
-                        formatDate(vehicle.dateOut)
-                      ) : (
-                        <span className="text-gray-400 italic">N/A</span>
-                      )}
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">
+                        <div className="font-medium">Out: {vehicle.dateOut ? formatDate(vehicle.dateOut) : <span className="text-gray-400 italic">Not set</span>}</div>
+                        <div className="text-gray-500">{vehicle.timeOut ? formatTime(vehicle.timeOut) : <span className="text-gray-400 italic">--:--</span>}</div>
+                        <div className="font-medium mt-1">In: {vehicle.dateIn ? formatDate(vehicle.dateIn) : <span className="text-gray-400 italic">Not set</span>}</div>
+                        <div className="text-gray-500">{vehicle.timeIn ? formatTime(vehicle.timeIn) : <span className="text-gray-400 italic">--:--</span>}</div>
+                      </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {vehicle.timeOut ? (
-                        formatTime(vehicle.timeOut)
-                      ) : (
-                        <span className="text-gray-400 italic">N/A</span>
-                      )}
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-lg font-bold text-gray-900">KSH {vehicle.dailyRate.toLocaleString('en-KE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                      <div className="text-xs text-gray-500">per day</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {vehicle.dateIn ? (
-                        formatDate(vehicle.dateIn)
-                      ) : (
-                        <span className="text-gray-400 italic">N/A</span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {vehicle.timeIn ? (
-                        formatTime(vehicle.timeIn)
-                      ) : (
-                        <span className="text-gray-400 italic">N/A</span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      KSH {vehicle.dailyRate.toLocaleString('en-KE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-1">
-                      <button
-                        onClick={() => {
-                          setSelectedVehicle(vehicle);
-                          setShowDetailsModal(true);
-                        }}
-                        className="inline-flex items-center text-blue-600 hover:text-blue-800 px-2 py-1 rounded transition focus:outline-none"
-                        title="View vehicle"
-                        aria-label="View vehicle"
-                      >
-                        View
-                      </button>
-                      <button
-                        onClick={() => handleEditClick(vehicle)}
-                        className="ml-1 inline-flex items-center text-yellow-600 hover:text-yellow-800 px-2 py-1 rounded transition focus:outline-none"
-                        title="Edit vehicle"
-                        aria-label="Edit vehicle"
-                      >
-                        <Edit className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteClick(vehicle)}
-                        className="ml-1 inline-flex items-center text-red-600 hover:text-red-800 px-2 py-1 rounded transition focus:outline-none"
-                        title="Delete vehicle"
-                        aria-label="Delete vehicle"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <div className="flex items-center justify-end space-x-2">
+                        <button
+                          onClick={() => {
+                            setSelectedVehicle(vehicle);
+                            setShowDetailsModal(true);
+                          }}
+                          className="inline-flex items-center px-3 py-2 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition focus:outline-none focus:ring-2 focus:ring-blue-200 font-medium"
+                          title="View vehicle details"
+                          aria-label="View vehicle"
+                        >
+                          View
+                        </button>
+                        <button
+                          onClick={() => handleEditClick(vehicle)}
+                          className="inline-flex items-center p-2 text-yellow-600 bg-yellow-50 hover:bg-yellow-100 rounded-lg transition focus:outline-none focus:ring-2 focus:ring-yellow-200"
+                          title="Edit vehicle"
+                          aria-label="Edit vehicle"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteClick(vehicle)}
+                          className="inline-flex items-center p-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition focus:outline-none focus:ring-2 focus:ring-red-200"
+                          title="Delete vehicle"
+                          aria-label="Delete vehicle"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -405,15 +439,15 @@ export default function VehicleManagement() {
       </div>
 
       {filteredVehicles.length === 0 && !loading && (
-        <div className="text-center py-12">
-          <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Car className="w-8 h-8 text-gray-400" />
+        <div className="text-center py-16">
+          <div className="w-32 h-32 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Car className="w-12 h-12 text-gray-400" />
           </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No vehicles found</h3>
-          <p className="text-gray-600">
+          <h3 className="text-xl font-semibold text-gray-900 mb-3">No vehicles found</h3>
+          <p className="text-gray-600 text-lg max-w-md mx-auto">
             {searchTerm
-              ? 'Try adjusting your search or check for typos.'
-              : 'Easily add your first vehicle using the Add Vehicle button above.'}
+              ? 'Try adjusting your search criteria or check for typos.'
+              : 'Start building your fleet by adding your first vehicle using the Add New Vehicle button above.'}
           </p>
         </div>
       )}
@@ -497,11 +531,16 @@ function AddVehicleForm({
     >
       <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-fadeIn">
         <div className="p-6">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold text-gray-900">Add New Vehicle</h2>
+          <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+            <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+              <div className="p-2 bg-blue-600 rounded-lg">
+                <Plus className="w-5 h-5 text-white" />
+              </div>
+              Add New Vehicle
+            </h2>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-500"
+              className="text-gray-400 hover:text-gray-600 transition-colors p-2 hover:bg-gray-100 rounded-lg"
               aria-label="Close"
             >
               <X className="h-6 w-6" />
@@ -521,203 +560,250 @@ function AddVehicleForm({
             </div>
           )}
 
-          <form className="space-y-4" onSubmit={handleSubmit}>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="make" className="block text-sm font-medium text-gray-700 mb-1">
-                  Make <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="make"
-                  name="make"
-                  value={formData.make}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="e.g., Toyota"
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="model" className="block text-sm font-medium text-gray-700 mb-1">
-                  Model <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="model"
-                  name="model"
-                  value={formData.model}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="e.g., Hiace"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="year" className="block text-sm font-medium text-gray-700 mb-1">
-                  Year <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="number"
-                  id="year"
-                  name="year"
-                  value={formData.year}
-                  onChange={handleChange}
-                  min="1900"
-                  max={new Date().getFullYear() + 1}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="color" className="block text-sm font-medium text-gray-700 mb-1">
-                  Color
-                </label>
-                <input
-                  type="text"
-                  id="color"
-                  name="color"
-                  value={formData.color}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="e.g., White"
-                />
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            {/* Vehicle Basic Information */}
+            <div className="bg-gray-50 rounded-xl p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <Car className="w-5 h-5 text-blue-600" />
+                Basic Information
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label htmlFor="make" className="block text-sm font-semibold text-gray-700 mb-2">
+                    Make <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="make"
+                    name="make"
+                    value={formData.make}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-lg"
+                    placeholder="e.g., Toyota"
+                    required
+                  />
+                </div>
+                <div>
+                  <label htmlFor="model" className="block text-sm font-semibold text-gray-700 mb-2">
+                    Model <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="model"
+                    name="model"
+                    value={formData.model}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-lg"
+                    placeholder="e.g., Hiace"
+                    required
+                  />
+                </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="licensePlate" className="block text-sm font-medium text-gray-700 mb-1">
-                  License Plate <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="licensePlate"
-                  name="licensePlate"
-                  value={formData.licensePlate}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="e.g., KDG 530X"
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="dailyRate" className="block text-sm font-medium text-gray-700 mb-1">
-                  Daily Rate (KSH) <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="number"
-                  id="dailyRate"
-                  name="dailyRate"
-                  value={formData.dailyRate}
-                  onChange={handleChange}
-                  min="0"
-                  step="0.01"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="e.g., 5000"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="dateOut" className="block text-sm font-medium text-gray-700 mb-1">
-                  Date Out
-                </label>
-                <input
-                  type="date"
-                  id="dateOut"
-                  name="dateOut"
-                  value={formData.dateOut}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label htmlFor="timeOut" className="block text-sm font-medium text-gray-700 mb-1">
-                  Time Out
-                </label>
-                <input
-                  type="time"
-                  id="timeOut"
-                  name="timeOut"
-                  value={formData.timeOut}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+            {/* Vehicle Specifications */}
+            <div className="bg-gray-50 rounded-xl p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <div className="p-1 bg-blue-100 rounded">
+                  <Car className="w-4 h-4 text-blue-600" />
+                </div>
+                Specifications
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label htmlFor="year" className="block text-sm font-semibold text-gray-700 mb-2">
+                    Year <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    id="year"
+                    name="year"
+                    value={formData.year}
+                    onChange={handleChange}
+                    min="1900"
+                    max={new Date().getFullYear() + 1}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-lg"
+                    required
+                  />
+                </div>
+                <div>
+                  <label htmlFor="color" className="block text-sm font-semibold text-gray-700 mb-2">
+                    Color
+                  </label>
+                  <input
+                    type="text"
+                    id="color"
+                    name="color"
+                    value={formData.color}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-lg"
+                    placeholder="e.g., White"
+                  />
+                </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="dateIn" className="block text-sm font-medium text-gray-700 mb-1">
-                  Date In
-                </label>
-                <input
-                  type="date"
-                  id="dateIn"
-                  name="dateIn"
-                  value={formData.dateIn}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label htmlFor="timeIn" className="block text-sm font-medium text-gray-700 mb-1">
-                  Time In
-                </label>
-                <input
-                  type="time"
-                  id="timeIn"
-                  name="timeIn"
-                  value={formData.timeIn}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-            </div>
-
-            {/* NEW: Status select */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
-                  Status
-                </label>
-                <select
-                  id="status"
-                  name="status"
-                  value={formData.status}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                >
-                  {VEHICLE_STATUSES.map((status) => (
-                    <option key={status} value={status}>{status}</option>
-                  ))}
-                </select>
+            {/* Registration & Pricing */}
+            <div className="bg-gray-50 rounded-xl p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <div className="p-1 bg-green-100 rounded">
+                  <div className="w-4 h-4 bg-green-600 rounded-full"></div>
+                </div>
+                Registration & Pricing
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label htmlFor="licensePlate" className="block text-sm font-semibold text-gray-700 mb-2">
+                    License Plate <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="licensePlate"
+                    name="licensePlate"
+                    value={formData.licensePlate}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-lg uppercase"
+                    placeholder="e.g., KDG 530X"
+                    required
+                  />
+                </div>
+                <div>
+                  <label htmlFor="dailyRate" className="block text-sm font-semibold text-gray-700 mb-2">
+                    Daily Rate (KSH) <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    id="dailyRate"
+                    name="dailyRate"
+                    value={formData.dailyRate}
+                    onChange={handleChange}
+                    min="0"
+                    step="0.01"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-lg"
+                    placeholder="e.g., 5000"
+                    required
+                  />
+                </div>
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3 pt-4">
+            {/* Rental Schedule */}
+            <div className="bg-gray-50 rounded-xl p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <Clock className="w-5 h-5 text-blue-600" />
+                Rental Schedule
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label htmlFor="dateOut" className="block text-sm font-semibold text-gray-700 mb-2">
+                    Date Out
+                  </label>
+                  <input
+                    type="date"
+                    id="dateOut"
+                    name="dateOut"
+                    value={formData.dateOut}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-lg"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="timeOut" className="block text-sm font-semibold text-gray-700 mb-2">
+                    Time Out
+                  </label>
+                  <input
+                    type="time"
+                    id="timeOut"
+                    name="timeOut"
+                    value={formData.timeOut}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-lg"
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                <div>
+                  <label htmlFor="dateIn" className="block text-sm font-semibold text-gray-700 mb-2">
+                    Date In
+                  </label>
+                  <input
+                    type="date"
+                    id="dateIn"
+                    name="dateIn"
+                    value={formData.dateIn}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-lg"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="timeIn" className="block text-sm font-semibold text-gray-700 mb-2">
+                    Time In
+                  </label>
+                  <input
+                    type="time"
+                    id="timeIn"
+                    name="timeIn"
+                    value={formData.timeIn}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-lg"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Vehicle Status */}
+            <div className="bg-gray-50 rounded-xl p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <AlertCircle className="w-5 h-5 text-blue-600" />
+                Vehicle Status
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label htmlFor="status" className="block text-sm font-semibold text-gray-700 mb-2">
+                    Current Status
+                  </label>
+                  <select
+                    id="status"
+                    name="status"
+                    value={formData.status}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-lg"
+                    required
+                  >
+                    {VEHICLE_STATUSES.map((status) => (
+                      <option key={status} value={status}>{status}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4 pt-6 border-t border-gray-200">
               <button
                 type="button"
                 onClick={onClose}
-                className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-100"
+                className="inline-flex items-center px-6 py-3 border border-gray-300 shadow-sm text-sm font-semibold rounded-lg text-gray-700 bg-white hover:bg-gray-100 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
               >
-                <X className="-ml-1 mr-2 h-4 w-4" />
+                <X className="-ml-1 mr-2 h-5 w-5" />
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${loading && 'opacity-60 cursor-not-allowed'
+                className={`inline-flex items-center px-6 py-3 border border-transparent text-sm font-semibold rounded-lg shadow-sm text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition ${loading && 'opacity-60 cursor-not-allowed'
                   }`}
               >
-                {loading ? 'Adding...' : 'Add Vehicle'}
+                {loading ? (
+                  <>
+                    <RefreshCw className="animate-spin -ml-1 mr-2 h-5 w-5" />
+                    Adding Vehicle...
+                  </>
+                ) : (
+                  <>
+                    <Plus className="-ml-1 mr-2 h-5 w-5" />
+                    Add Vehicle
+                  </>
+                )}
               </button>
             </div>
           </form>
